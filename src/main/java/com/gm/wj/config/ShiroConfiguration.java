@@ -28,18 +28,19 @@ public class ShiroConfiguration {
     public static LifecycleBeanPostProcessor getLifecycleBeanProcessor() {
         return new LifecycleBeanPostProcessor();
     }
-
+    //入口来拦截需要安全控制的URL
     @Bean
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
+        //没有登录的用户请求需要登录的页面时自动跳转到登录页面
         shiroFilterFactoryBean.setLoginUrl("/nowhere");
 
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         Map<String, Filter> customizedFilter = new HashMap<>();  // 自定义过滤器设置 1
 
         customizedFilter.put("url", getURLPathMatchingFilter()); // 自定义过滤器设置 2，命名，需在设置过滤路径前
-
+        //authc: 需要认证才可访问
         filterChainDefinitionMap.put("/api/authentication", "authc"); // 防鸡贼登录
         filterChainDefinitionMap.put("/api/menu", "authc");
         filterChainDefinitionMap.put("/api/admin/**", "authc");
@@ -50,11 +51,11 @@ public class ShiroConfiguration {
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
-
+    //自定义过滤器
     public URLPathMatchingFilter getURLPathMatchingFilter() {
         return new URLPathMatchingFilter();
     }
-
+    //SecurityManager是一个安全管理器
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
@@ -62,18 +63,18 @@ public class ShiroConfiguration {
         securityManager.setRememberMeManager(rememberMeManager());
         return securityManager;
     }
-
+    //remember管理器
     public CookieRememberMeManager rememberMeManager() {
         CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
         cookieRememberMeManager.setCookie(rememberMeCookie());
         cookieRememberMeManager.setCipherKey("EVANNIGHTLY_WAOU".getBytes());
         return cookieRememberMeManager;
     }
-
+    //记住密码cookie
     @Bean
     public SimpleCookie rememberMeCookie() {
         SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
-        simpleCookie.setMaxAge(259200);
+        simpleCookie.setMaxAge(259200);//过期时间
         return simpleCookie;
     }
 
@@ -83,7 +84,13 @@ public class ShiroConfiguration {
         wjRealm.setCredentialsMatcher(hashedCredentialsMatcher());
         return wjRealm;
     }
-
+    /**
+     * 密码校验规则HashedCredentialsMatcher
+     * 这个类是为了对密码进行编码的 ,
+     * 防止密码在数据库里明码保存 , 当然在登陆认证的时候 ,
+     * 这个类也负责对form里输入的密码进行编码
+     * 处理认证匹配处理器：如果自定义需要实现继承HashedCredentialsMatcher
+     */
     @Bean
     public HashedCredentialsMatcher hashedCredentialsMatcher() {
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
@@ -92,6 +99,12 @@ public class ShiroConfiguration {
         return hashedCredentialsMatcher;
     }
 
+    /**
+     *  开启shiro aop注解支持.
+     *  使用代理方式;所以需要开启代码支持;
+     * @param securityManager
+     * @return
+     */
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();

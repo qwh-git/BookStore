@@ -2,11 +2,13 @@ package com.gm.wj.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.sql.Date;
 
 /**
@@ -20,7 +22,7 @@ import java.sql.Date;
 @Table(name = "jotter_article")
 @ToString
 @JsonIgnoreProperties({"handler","hibernateLazyInitializer"})
-public class JotterArticle {
+public class JotterArticle{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

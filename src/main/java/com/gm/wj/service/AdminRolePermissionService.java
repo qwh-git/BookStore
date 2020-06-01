@@ -18,22 +18,22 @@ import java.util.List;
 public class AdminRolePermissionService {
     @Autowired
     AdminRolePermissionDAO adminRolePermissionDAO;
-
+    //根据角色id获取对应的资源
     List<AdminRolePermission> findAllByRid(int rid) {
         return adminRolePermissionDAO.findAllByRid(rid);
     }
 
-//    @Modifying
+    //删除该角色对应的资源关系&赋值资源给角色&保存角色对应的赋值关系
     @Transactional
     public void savePermChanges(int rid, List<AdminPermission> perms) {
-        adminRolePermissionDAO.deleteAllByRid(rid);
+        adminRolePermissionDAO.deleteAllByRid(rid);//删除该角色对应的资源关系
         List<AdminRolePermission> rps = new ArrayList<>();
         perms.forEach(p -> {
-            AdminRolePermission rp = new AdminRolePermission();
+            AdminRolePermission rp = new AdminRolePermission(); //赋值资源给角色
             rp.setRid(rid);
             rp.setPid(p.getId());
             rps.add(rp);
-        });
+        }); //保存角色对应的赋值关系
         adminRolePermissionDAO.saveAll(rps);
     }
 }

@@ -27,6 +27,7 @@ public class LoginController {
     @Autowired
     UserService userService;
 
+    //用户登录
     @PostMapping("/api/login")
     public Result login(@RequestBody User requestUser) {
         String username = requestUser.getUsername();
@@ -38,11 +39,12 @@ public class LoginController {
         usernamePasswordToken.setRememberMe(true);
         try {
             subject.login(usernamePasswordToken);
+
             User user = userService.findByUsername(username);
             if (!user.isEnabled()) {
                 return ResultFactory.buildFailResult("该用户已被禁用");
             }
-            return ResultFactory.buildSuccessResult(username);
+            return ResultFactory.buildSuccessResult(user);
         } catch (IncorrectCredentialsException e) {
             return ResultFactory.buildFailResult("密码错误");
         } catch (UnknownAccountException e) {
@@ -50,6 +52,7 @@ public class LoginController {
         }
     }
 
+    //用户注册
     @PostMapping("/api/register")
     public Result register(@RequestBody User user) {
         int status = userService.register(user);
@@ -64,6 +67,7 @@ public class LoginController {
         return ResultFactory.buildFailResult("未知错误");
     }
 
+    //用户注销
     @GetMapping("/api/logout")
     public Result logout() {
         Subject subject = SecurityUtils.getSubject();
@@ -71,6 +75,7 @@ public class LoginController {
         return ResultFactory.buildSuccessResult("成功登出");
     }
 
+    //身份认证
     @GetMapping("/api/authentication")
     public String authentication() {
         return "身份认证成功";

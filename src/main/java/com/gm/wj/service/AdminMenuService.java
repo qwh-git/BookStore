@@ -26,44 +26,43 @@ public class AdminMenuService {
     AdminUserRoleService adminUserRoleService;
     @Autowired
     AdminRoleMenuService adminRoleMenuService;
-
+    //根据菜单pid查询菜单
     public List<AdminMenu> getAllByParentId(int parentId) {
         return adminMenuDAO.findAllByParentId(parentId);
     }
-
+    //根据用户名获取角色该有的菜单权限
     public List<AdminMenu> getMenusByCurrentUser() {
-        // Get current user in DB.
+        // 获取授权的用户名
         String username = SecurityUtils.getSubject().getPrincipal().toString();
         User user = userService.findByUsername(username);
 
-        // Get roles' ids of current user.
+        //根据用户id获取角色id集合
         List<Integer> rids = adminUserRoleService.listAllByUid(user.getId())
                 .stream().map(AdminUserRole::getRid).collect(Collectors.toList());
 
-        // Get menu items of these roles.
+        //根据角色id获取菜单id集合
         List<Integer> menuIds = adminRoleMenuService.findAllByRid(rids)
                 .stream().map(AdminRoleMenu::getMid).collect(Collectors.toList());
+
+        //根据菜单id的集合查找该角色显示的菜单权限
         List<AdminMenu> menus = adminMenuDAO.findAllById(menuIds).stream().distinct().collect(Collectors.toList());
 
-        // Adjust the structure of the menu.
         handleMenus(menus);
         return menus;
     }
-
+    //根据角色id查询菜单的权限
     public List<AdminMenu> getMenusByRoleId(int rid) {
+
         List<Integer> menuIds = adminRoleMenuService.findAllByRid(rid)
                 .stream().map(AdminRoleMenu::getMid).collect(Collectors.toList());
+
         List<AdminMenu> menus = adminMenuDAO.findAllById(menuIds);
 
         handleMenus(menus);
         return menus;
     }
 
-    /**
-     * Adjust the Structure of the menu.
-     *
-     * @param menus Menu items list without structure
-     */
+    //根据父菜单的id显示子菜单
     public void handleMenus(List<AdminMenu> menus) {
         menus.forEach(m -> {
             List<AdminMenu> children = getAllByParentId(m.getId());

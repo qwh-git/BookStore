@@ -17,11 +17,13 @@ public class MenuController {
     @Autowired
     AdminMenuService adminMenuService;
 
+    //根据用户名获取角色该有的菜单权限
     @GetMapping("/api/menu")
     public Result menu() {
         return ResultFactory.buildSuccessResult(adminMenuService.getMenusByCurrentUser());
     }
 
+    //根据角色id查询菜单的权限
     @GetMapping("/api/admin/role/menu")
     public Result listAllMenus() {
         return ResultFactory.buildSuccessResult(adminMenuService.getMenusByRoleId(1));

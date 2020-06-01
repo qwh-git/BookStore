@@ -5,8 +5,6 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 /**
  * Book entity.
@@ -30,6 +28,14 @@ public class Book {
      */
     private String title;
 
+    /**
+     * Title of the price.
+     */
+    private int price;
+    /**
+     * Title of the price.
+     */
+    private int reserve;
     /**
      * Author name.
      */
@@ -61,4 +67,6 @@ public class Book {
     @ManyToOne
     @JoinColumn(name="cid")
     private Category category;
+
+
 }

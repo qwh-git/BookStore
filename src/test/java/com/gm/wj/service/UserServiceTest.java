@@ -2,6 +2,7 @@ package com.gm.wj.service;
 
 import com.gm.wj.entity.AdminRole;
 import com.gm.wj.entity.User;
+import com.gm.wj.redis.RedisService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.After;
 import org.junit.Assert;
@@ -27,6 +28,9 @@ import static org.hamcrest.CoreMatchers.nullValue;
 @SpringBootTest
 public class UserServiceTest {
     @Autowired
+    private RedisService redisService;
+
+    @Autowired
     private UserService userService;
 
     List<AdminRole> roles = new ArrayList<>();
@@ -35,6 +39,20 @@ public class UserServiceTest {
     public void before() {
         userService.addOrUpdate(User.builder().username("utest").build());
     }
+
+//        redisService.set("myName","薛之谦");
+//        String a = (String) redisService.get("myName");
+//        System.out.println("myName = " + a);
+
+    @Test
+    public void demotest(){
+        System.out.println("-------------开始-------------");
+        String name = "沉默王二";
+        // \u000dname="沉默王三";
+        System.out.println(name);
+        System.out.println("-------------结束-------------");
+    }
+
 
     @Test
     @Transactional
