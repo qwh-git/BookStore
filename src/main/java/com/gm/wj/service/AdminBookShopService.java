@@ -118,13 +118,13 @@ public class AdminBookShopService {
 
 
     //根据用户查询购物车
-    public int findByUidsize(int uid) {
+    public Integer findByUidsize(int uid) {
         int sum=0;
        List<AdminBookShop> list=adminBookShopDao.findByUid(uid);
        for (AdminBookShop adminBookShop:list){
            sum+=adminBookShop.getCount();
        }
-
+       System.out.println("放回="+(sum==0?null:sum));
         return sum==0?null:sum;
     }
 
