@@ -21,6 +21,12 @@ public class OrderController {
         return ResultFactory.buildSuccessResult(orderService.OrderSize(username));
     }
 
+    @GetMapping("/api/OrderList1")
+    public Result OrderList1() throws ParseException {
+
+        return ResultFactory.buildSuccessResult(orderService.OrderList1());
+    }
+
     @GetMapping("/api/OrderList")
     public Result OrderList(@RequestParam("username") String username) throws ParseException {
 

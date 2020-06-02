@@ -8,6 +8,9 @@ import com.gm.wj.entity.Item;
 import com.gm.wj.entity.Order;
 import org.elasticsearch.index.mapper.Uid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -103,6 +106,20 @@ public class AdminBookShopService {
         }
     }
 
+
+    public List<AdminBookShop> list() {
+        List<AdminBookShop> list =adminBookShopDao.findAll();
+        List<Book> books=new ArrayList<>();
+        for (AdminBookShop l:list){
+            books.add(bookService.findById(l.getBid()));
+        }
+        for (AdminBookShop l:list){
+            l.setBooks1(books);
+        }
+        return list;
+    }
+
+
     //根据用户查询购物车
     public List<AdminBookShop> findByUid(int uid) {
        List<AdminBookShop>list=adminBookShopDao.findByUid(uid);
@@ -124,7 +141,6 @@ public class AdminBookShopService {
        for (AdminBookShop adminBookShop:list){
            sum+=adminBookShop.getCount();
        }
-       System.out.println("放回="+(sum==0?null:sum));
         return sum==0?null:sum;
     }
 

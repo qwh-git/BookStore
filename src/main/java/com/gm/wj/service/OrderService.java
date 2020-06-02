@@ -16,7 +16,7 @@ public class OrderService {
         orderDAO.save(order);
     }
 
-    public int OrderSize(String username) {
+    public Integer OrderSize(String username) {
 
         return orderDAO.getByUsername(username).size()==0?null:orderDAO.getByUsername(username).size();
     }
@@ -24,5 +24,10 @@ public class OrderService {
     public List<Order> OrderList(String username) {
 
         return orderDAO.getByUsername(username);
+    }
+
+    public List<Order> OrderList1() {
+
+        return orderDAO.findAll();
     }
 }

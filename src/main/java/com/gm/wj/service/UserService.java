@@ -33,8 +33,6 @@ public class UserService {
 
         return  userDAO.getById(id);
     }
-
-
     //查询全部用户
     public List<UserDTO> list() {
         List<User> users = userDAO.findAll();

@@ -50,7 +50,6 @@ public class UserController {
         userService.editUser(requestUser);
         return ResultFactory.buildSuccessResult("修改用户信息成功");
     }
-
     //删除用户
     @PostMapping("/api/admin/user/deletuser")
     public Result deleteUser(@RequestBody User requestUser) {

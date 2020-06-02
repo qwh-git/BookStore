@@ -52,4 +52,10 @@ public class ShopController {
         return ResultFactory.buildSuccessResult(adminBookShopService.findByUidsize(uid));
     }
 
+    //根据第几页，显示多少条，DESC降序显示购物车
+    @GetMapping("/api/shop")
+    public Result listArticles() {
+        return ResultFactory.buildSuccessResult(adminBookShopService.list());
+    }
+
 }
